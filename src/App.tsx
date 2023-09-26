@@ -1,26 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { lazy, Suspense } from 'react';
+import { Route, Routes } from 'react-router-dom'
+import Loading from './Components/Utils/Loading/Loading';
+import { RoutesLinks } from './Routes';
+import Layout from './Layout/app/Layout';
+const Page404 = lazy(() => import("./Pages/Home/Page404"))
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Routes>
+      <Route path="*" element={<Suspense fallback={<Loading />}> <Page404 /></Suspense>} />
+      {RoutesLinks?.map((item: any, index: number) => (
+        <Route key={index} path={item.href} element={<Suspense fallback={<Loading />}>
+          <Layout>  {item?.element ?? "Creat the page Ya Hemar"} </Layout></Suspense>} />))
+      }
+    </Routes>
+  )
 }
 
-export default App;
+export default App
